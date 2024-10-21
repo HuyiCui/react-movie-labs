@@ -47,6 +47,7 @@ const MovieDetails = ({ movie }) => {  // Don't miss this!
           </li>
         ))}
       </Paper>
+
       <Paper component="ul" sx={{...root}}>
         <Chip icon={<AccessTimeIcon />} label={`${movie.runtime} min.`} />
         <Chip
@@ -59,6 +60,12 @@ const MovieDetails = ({ movie }) => {  // Don't miss this!
         />
         <Chip label={`Released: ${movie.release_date}`} />
       </Paper>
+
+      <Paper component="ul" sx={{...root}}>
+        <Chip label={`Production Countries`} color="primary"/>
+        <Chip label={movie.production_countries.map(country => country.name).join(', ')} />
+      </Paper>
+
       <Fab
         color="secondary"
         variant="extended"
