@@ -1,7 +1,5 @@
 import React from "react";
 import Typography from "@mui/material/Typography";
-import { useQuery } from "react-query";
-import Spinner from '../spinner'
 
 const MovieReview =  ({ review }) => {
   return (
