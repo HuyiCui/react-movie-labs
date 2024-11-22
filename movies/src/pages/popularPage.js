@@ -9,6 +9,8 @@ const PopularityPage = (props) => {
 
   const {  data, error, isLoading, isError }  = useQuery('popular', getPopularity)
   const [sortOrder, setSortOrder] = useState("asc");
+  const [currentPage, setCurrentPage] = useState(1); 
+  const moviesPerPage = 10;
 
   if (isLoading) {
     return <Spinner />
@@ -24,6 +26,24 @@ const PopularityPage = (props) => {
       ? a.vote_average - b.vote_average 
       : b.vote_average - a.vote_average; 
   });
+
+  const indexOfLastMovie = currentPage * moviesPerPage;
+  const indexOfFirstMovie = indexOfLastMovie - moviesPerPage;
+  const currentMovies = sortedMovies.slice(indexOfFirstMovie, indexOfLastMovie);
+
+  const totalPages = Math.ceil(sortedMovies.length / moviesPerPage);
+
+  const goToNextPage = () => {
+    if (currentPage < totalPages) {
+      setCurrentPage(currentPage + 1);
+    }
+  };
+
+  const goToPreviousPage = () => {
+    if (currentPage > 1) {
+      setCurrentPage(currentPage - 1);
+    }
+  };
 
   const toggleSortOrder = () => {
     setSortOrder((prev) => (prev === "asc" ? "desc" : "asc"));
@@ -42,11 +62,28 @@ const PopularityPage = (props) => {
     
     <PageTemplate
       title="Popular Movies"
-      movies={sortedMovies}
+      movies={currentMovies}
       action={(movie) => {
         return <AddToFavoritesIcon movie={movie} />;
       }}
     />
+    <div style={{ display: "flex", justifyContent: "center", margin: "20px 0" }}>
+        <button
+          onClick={goToPreviousPage}
+          disabled={currentPage === 1}
+          style={{ marginRight: "10px" }}
+        >
+          Previous
+        </button>
+        <span>Page {currentPage} of {totalPages}</span>
+        <button
+          onClick={goToNextPage}
+          disabled={currentPage === totalPages}
+          style={{ marginLeft: "10px" }}
+        >
+          Next
+        </button>
+      </div>
   </div>
 );
 };
