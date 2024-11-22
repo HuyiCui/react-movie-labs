@@ -11,6 +11,7 @@ import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
 import img from '../../images/pexels-dziana-hasanbekava-5480827.jpg'
 import { getGenres } from "../../api/tmdb-api";
+import { getLanguages } from "../../api/tmdb-api";
 import { useQuery } from "react-query";
 import Spinner from '../spinner'
 
@@ -24,6 +25,7 @@ const formControl =
 export default function FilterMoviesCard(props) {
 
   const { data, error, isLoading, isError } = useQuery("genres", getGenres);
+  const { data: languagesData, isLoading: languagesLoading } = useQuery("languages", getLanguages);
 
   if (isLoading) {
     return <Spinner />;
@@ -37,6 +39,11 @@ export default function FilterMoviesCard(props) {
     genres.unshift({ id: "0", name: "All" });
   }
 
+  const languages = languagesData || [];
+    if (languages[0]?.english_name !== "All") {
+        languages.unshift({ iso_639_1: "all", english_name: "All" });
+    }
+
   const handleChange = (e, type, value) => {
     e.preventDefault();
     props.onUserInput(type, value); // NEW
@@ -49,6 +56,10 @@ export default function FilterMoviesCard(props) {
   const handleGenreChange = (e) => {
     handleChange(e, "genre", e.target.value);
   };
+
+  const handleLanguageChange = (e) => {
+    handleChange(e, "language", e.target.value);
+};
 
   return (
     <Card 
@@ -71,7 +82,7 @@ export default function FilterMoviesCard(props) {
             onChange={handleTextChange}
         />
         <FormControl sx={{...formControl}}>
-          <InputLabel id="genre-label">Genre</InputLabel>
+          <InputLabel id="genre-label"></InputLabel>
             <Select
                 labelId="genre-label"
                 id="genre-select"
@@ -87,6 +98,19 @@ export default function FilterMoviesCard(props) {
               );
             })}
           </Select>
+          <InputLabel id="language-label"></InputLabel>
+            <Select
+                labelId="language-label"
+                id="language-select"
+                value={props.languageFilter}
+                onChange={handleLanguageChange}
+            >
+                {languages.map((lang) => (
+                    <MenuItem key={lang.iso_639_1} value={lang.iso_639_1}>
+                        {lang.english_name}
+                    </MenuItem>
+                ))}
+            </Select>
         </FormControl>
       </CardContent>
       <CardMedia
