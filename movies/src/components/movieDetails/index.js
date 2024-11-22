@@ -10,6 +10,8 @@ import Fab from "@mui/material/Fab";
 import Typography from "@mui/material/Typography";
 import Drawer from "@mui/material/Drawer";
 import MovieReviews from "../movieReviews"
+import { Link } from "react-router-dom" ;
+import Button from "@mui/material/Button";
 
 
 const root = {
@@ -69,6 +71,19 @@ const MovieDetails = ({ movie }) => {  // Don't miss this!
       <Paper component="ul" sx={{...root}}>
         <Chip label={`Production Countries`} color="primary"/>
         <Chip label={movie.production_countries.map(country => country.name).join(', ')} />
+      </Paper>
+
+      <Paper component="ul" sx={{...root}}>
+        <Link to={`/similar/${movie.id}`}>
+          <Button variant="outlined" size="medium" color="primary">
+            Similar ...
+          </Button>
+        </Link>
+        <Link to={`/recommend/${movie.id}`}>
+          <Button variant="outlined" size="medium" color="primary">
+            Recommendation ...
+          </Button>
+        </Link>
       </Paper>
 
       <Fab
